@@ -87,4 +87,4 @@ history2 = model.fit(
 # Guardar modelo (formato nuevo recomendado)
 model.save("modelo_mobilenetv3.keras")
 
-print("\n✅ MobileNetV3 entrenado correctamente en 2 fases")
+print("\n MobileNetV3 entrenado correctamente en 2 fases")

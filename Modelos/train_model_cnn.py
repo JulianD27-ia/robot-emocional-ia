@@ -58,4 +58,4 @@ history = model.fit(
 # Guardar modelo
 model.save("modelo_cnn_basico.h5")
 
-print("✅ CNN básico entrenado y guardado")
+print(" CNN básico entrenado y guardado")
