@@ -2,11 +2,11 @@ import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.applications import MobileNetV3Small
 
-# 📌 Parámetros
+#  Parámetros
 IMG_SIZE = 96
 BATCH_SIZE = 32
 
-# 📂 Generador de datos (SIN augmentación por ahora)
+# Generador de datos (SIN augmentación por ahora)
 datagen = ImageDataGenerator(
     rescale=1./255,
     validation_split=0.2
@@ -28,14 +28,14 @@ val_data = datagen.flow_from_directory(
     subset='validation'
 )
 
-# 🧠 Modelo base
+#  Modelo base
 base_model = MobileNetV3Small(
     input_shape=(IMG_SIZE, IMG_SIZE, 3),
     include_top=False,
     weights='imagenet'
 )
 
-# 🔒 FASE 1: Congelar TODAS las capas
+# FASE 1: Congelar TODAS las capas
 for layer in base_model.layers:
     layer.trainable = False
 
@@ -48,7 +48,7 @@ output = tf.keras.layers.Dense(7, activation='softmax')(x)
 
 model = tf.keras.models.Model(inputs=base_model.input, outputs=output)
 
-# ⚙️ Compilar (fase 1)
+# Compilar (fase 1)
 model.compile(
     optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
     loss='categorical_crossentropy',
@@ -57,18 +57,18 @@ model.compile(
 
 print("\n🔹 FASE 1: Entrenando solo la cabeza del modelo...\n")
 
-# 🏋️ Entrenamiento FASE 1
+# Entrenamiento FASE 1
 history1 = model.fit(
     train_data,
     validation_data=val_data,
     epochs=10
 )
 
-# 🔓 FASE 2: Descongelar últimas capas
+# FASE 2: Descongelar últimas capas
 for layer in base_model.layers[-20:]:
     layer.trainable = True
 
-# ⚙️ Recompilar (fase 2 con LR bajo)
+# Recompilar (fase 2 con LR bajo)
 model.compile(
     optimizer=tf.keras.optimizers.Adam(learning_rate=0.0001),
     loss='categorical_crossentropy',
@@ -77,14 +77,14 @@ model.compile(
 
 print("\n🔹 FASE 2: Fine-tuning de las últimas capas...\n")
 
-# 🏋️ Entrenamiento FASE 2
+#  Entrenamiento FASE 2
 history2 = model.fit(
     train_data,
     validation_data=val_data,
     epochs=10
 )
 
-# 💾 Guardar modelo (formato nuevo recomendado)
+# Guardar modelo (formato nuevo recomendado)
 model.save("modelo_mobilenetv3.keras")
 
 print("\n✅ MobileNetV3 entrenado correctamente en 2 fases")

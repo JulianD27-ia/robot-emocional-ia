@@ -2,7 +2,7 @@ import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras import layers, models
 
-# 📂 Generador de datos
+# Generador de datos
 datagen = ImageDataGenerator(rescale=1./255, validation_split=0.2)
 
 train_data = datagen.flow_from_directory(
@@ -21,7 +21,7 @@ val_data = datagen.flow_from_directory(
     subset='validation'
 )
 
-# 🧠 CNN básico
+#  CNN básico
 model = models.Sequential()
 
 model.add(layers.Conv2D(32, (3,3), activation='relu', input_shape=(48,48,3)))
@@ -39,7 +39,7 @@ model.add(layers.Dropout(0.5))
 
 model.add(layers.Dense(7, activation='softmax'))
 
-# ⚙️ Compilar
+# Compilar
 model.compile(
     optimizer='adam',
     loss='categorical_crossentropy',
@@ -48,14 +48,14 @@ model.compile(
 
 model.summary()
 
-# 🏋️ Entrenamiento
+#  Entrenamiento
 history = model.fit(
     train_data,
     validation_data=val_data,
     epochs=10
 )
 
-# 💾 Guardar modelo
+# Guardar modelo
 model.save("modelo_cnn_basico.h5")
 
 print("✅ CNN básico entrenado y guardado")
